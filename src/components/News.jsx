@@ -8,12 +8,33 @@ const {Text, Title} = Typography
 const {Option} = Select
 
 
-const News = () => {
-  const {data: cryptoNews, isFetching} = useGetCryptoNewsQuery({newsCategory: 'Cryptocurrency', count: 10})
-  console.log(cryptoNews)
+const News = ({simplified}) => {
+  const {data, isFetching} = useGetCryptoNewsQuery(simplified? 5 : 20)
   if (isFetching) return 'Loading...'
+ 
   return (
-    <div>News</div>
+    <Row gutter={[24, 24]}>
+      {data.map((news, i)=>(
+        <Col xs={24} sm={12} lg={8} key={i}>
+          <Card hoverable className='news-card'>
+            <a href={news.url} target='_blank' rel='noreferrer'>
+              <div className='news-image-container'>
+                <Title className='news-title' level={4}>{news.title}</Title>
+              </div>
+              <p>{news.description >100 
+                  ? `${news.description.subsctring(0,100)}...`
+                  : news.description}
+              </p>
+              <div className='provider-container'>
+                <div>
+                  <Text>{news.date}</Text>
+                </div>
+              </div>
+            </a>
+          </Card>
+        </Col>
+      ))}
+    </Row>
   )
 }
 
